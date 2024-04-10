@@ -96,21 +96,9 @@ func TestServer(config Config) error {
 
 // Root
 
-func ShowDBs(config Config, sessionId string) (Table, error) {
-	url, err := ConstructUrl("", "", config)
-	if err != nil {
-		return Table{}, err
-	}
+func ShowDBs(sessionId string, config Config) (Table, error) {
 	query := "show"
-	body := requestBody{
-		Query:     query,
-		SessionId: sessionId,
-	}
-	req, err := ConstructRequest(body, url)
-	if err != nil {
-		return Table{}, err
-	}
-	return DoRequest(req)
+	return request(query, "", "", sessionId, config)
 }
 
 // DB
@@ -149,3 +137,19 @@ func DeleteRow() {}
 // User
 
 // Backup
+
+func request(query string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	url, err := ConstructUrl(tbl, db, config)
+	if err != nil {
+		return Table{}, err
+	}
+	body := requestBody{
+		Query:     query,
+		SessionId: sessionId,
+	}
+	req, err := ConstructRequest(body, url)
+	if err != nil {
+		return Table{}, err
+	}
+	return DoRequest(req)
+}
