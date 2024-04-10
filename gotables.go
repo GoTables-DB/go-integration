@@ -103,11 +103,30 @@ func ShowDBs(sessionId string, config Config) (Table, error) {
 
 // DB
 
-func ShowTables() {}
-func CreateDB()   {}
-func SetDBName()  {}
-func CopyDB()     {}
-func DeleteDB()   {}
+func ShowTables(db string, sessionId string, config Config) (Table, error) {
+	query := "show"
+	return request(query, "", db, sessionId, config)
+}
+
+func CreateDB(db string, sessionId string, config Config) (Table, error) {
+	query := "create"
+	return request(query, "", db, sessionId, config)
+}
+
+func SetDBName(name string, db string, sessionId string, config Config) (Table, error) {
+	query := "set name " + name
+	return request(query, "", db, sessionId, config)
+}
+
+func CopyDB(name string, db string, sessionId string, config Config) (Table, error) {
+	query := "copy " + name
+	return request(query, "", db, sessionId, config)
+}
+
+func DeleteDB(db string, sessionId string, config Config) (Table, error) {
+	query := "delete"
+	return request(query, "", db, sessionId, config)
+}
 
 // Table
 
@@ -137,6 +156,8 @@ func DeleteRow() {}
 // User
 
 // Backup
+
+// Helper functions
 
 func request(query string, tbl string, db string, sessionId string, config Config) (Table, error) {
 	url, err := ConstructUrl(tbl, db, config)
