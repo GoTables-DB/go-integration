@@ -9,6 +9,7 @@ import (
 	"git.jereileu.ch/gotables/server/gt-server/table"
 	"io"
 	"net/http"
+	"strconv"
 )
 
 type Config struct {
@@ -232,11 +233,37 @@ func DeleteColumn(column string, tbl string, db string, sessionId string, config
 
 // Row
 
-func ShowRow()   {}
-func CreateRow() {}
-func SetRow()    {}
-func CopyRow()   {}
-func DeleteRow() {}
+func ShowRow(row int, tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "row show " + strconv.Itoa(row)
+	return request(query, tbl, db, sessionId, config)
+}
+
+func CreateRow(values [][2]string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	valueString := ""
+	for i := 0; i < len(values); i++ {
+		valueString += values[i][0] + ":" + values[i][1]
+		if i != len(values)-1 {
+			valueString += " "
+		}
+	}
+	query := "row create " + valueString
+	return request(query, tbl, db, sessionId, config)
+}
+
+func SetRow(value string, colName string, row int, tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "row set " + strconv.Itoa(row) + ":" + colName + " " + value
+	return request(query, tbl, db, sessionId, config)
+}
+
+func CopyRow(row int, tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "row copy " + strconv.Itoa(row)
+	return request(query, tbl, db, sessionId, config)
+}
+
+func DeleteRow(row int, tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "row delete " + strconv.Itoa(row)
+	return request(query, tbl, db, sessionId, config)
+}
 
 // User
 
