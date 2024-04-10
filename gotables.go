@@ -82,6 +82,22 @@ func DoRequest(req *http.Request) (Table, error) {
 	return tbl, err
 }
 
+func Request(query string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	url, err := ConstructUrl(tbl, db, config)
+	if err != nil {
+		return Table{}, err
+	}
+	body := requestBody{
+		Query:     query,
+		SessionId: sessionId,
+	}
+	req, err := ConstructRequest(body, url)
+	if err != nil {
+		return Table{}, err
+	}
+	return DoRequest(req)
+}
+
 func RunServer(config Config) {
 	server.Run(config.Conf)
 }
@@ -99,41 +115,41 @@ func TestServer(config Config) error {
 
 func ShowDBs(sessionId string, config Config) (Table, error) {
 	query := "show"
-	return request(query, "", "", sessionId, config)
+	return Request(query, "", "", sessionId, config)
 }
 
 // DB
 
 func ShowTables(db string, sessionId string, config Config) (Table, error) {
 	query := "show"
-	return request(query, "", db, sessionId, config)
+	return Request(query, "", db, sessionId, config)
 }
 
 func CreateDB(db string, sessionId string, config Config) (Table, error) {
 	query := "create"
-	return request(query, "", db, sessionId, config)
+	return Request(query, "", db, sessionId, config)
 }
 
 func SetDBName(name string, db string, sessionId string, config Config) (Table, error) {
 	query := "set name " + name
-	return request(query, "", db, sessionId, config)
+	return Request(query, "", db, sessionId, config)
 }
 
 func CopyDB(name string, db string, sessionId string, config Config) (Table, error) {
 	query := "copy " + name
-	return request(query, "", db, sessionId, config)
+	return Request(query, "", db, sessionId, config)
 }
 
 func DeleteDB(db string, sessionId string, config Config) (Table, error) {
 	query := "delete"
-	return request(query, "", db, sessionId, config)
+	return Request(query, "", db, sessionId, config)
 }
 
 // Table
 
 func ShowTable(tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "show"
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func ShowTableColumns(columns []string, tbl string, db string, sessionId string, config Config) (Table, error) {
@@ -145,7 +161,7 @@ func ShowTableColumns(columns []string, tbl string, db string, sessionId string,
 		}
 	}
 	query := "show " + colNames
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func ShowTableConditions(conditions []string, columns []string, tbl string, db string, sessionId string, config Config) (Table, error) {
@@ -164,34 +180,34 @@ func ShowTableConditions(conditions []string, columns []string, tbl string, db s
 		}
 	}
 	query := "show " + colNames + " where " + conditionString
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func CreateTable(tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "create"
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func SetTableName(name string, tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "set name " + name
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func CopyTable(name string, tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "copy " + name
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func DeleteTable(tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "delete"
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 // Column
 
 func ShowColumn(column string, tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "column show " + column
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func ShowColumns(columns []string, tbl string, db string, sessionId string, config Config) (Table, error) {
@@ -203,39 +219,39 @@ func ShowColumns(columns []string, tbl string, db string, sessionId string, conf
 		}
 	}
 	query := "column show " + colNames
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func CreateColumn(column Column, tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "column create " + column.Name + ":" + column.Type + ":" + column.Default
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func SetColumnName(name string, column string, tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "column set name " + column + " " + name
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func SetColumnDefault(def string, column string, tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "column set default " + column + " " + def
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func CopyColumn(name string, column string, tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "column copy " + column + " " + name
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func DeleteColumn(column string, tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "column delete " + column
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 // Row
 
 func ShowRow(row int, tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "row show " + strconv.Itoa(row)
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func CreateRow(values [][2]string, tbl string, db string, sessionId string, config Config) (Table, error) {
@@ -247,42 +263,24 @@ func CreateRow(values [][2]string, tbl string, db string, sessionId string, conf
 		}
 	}
 	query := "row create " + valueString
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func SetRow(value string, colName string, row int, tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "row set " + strconv.Itoa(row) + ":" + colName + " " + value
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func CopyRow(row int, tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "row copy " + strconv.Itoa(row)
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 func DeleteRow(row int, tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "row delete " + strconv.Itoa(row)
-	return request(query, tbl, db, sessionId, config)
+	return Request(query, tbl, db, sessionId, config)
 }
 
 // User
 
 // Backup
-
-// Helper functions
-
-func request(query string, tbl string, db string, sessionId string, config Config) (Table, error) {
-	url, err := ConstructUrl(tbl, db, config)
-	if err != nil {
-		return Table{}, err
-	}
-	body := requestBody{
-		Query:     query,
-		SessionId: sessionId,
-	}
-	req, err := ConstructRequest(body, url)
-	if err != nil {
-		return Table{}, err
-	}
-	return DoRequest(req)
-}
