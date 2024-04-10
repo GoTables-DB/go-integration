@@ -157,12 +157,47 @@ func DeleteTable(tbl string, db string, sessionId string, config Config) (Table,
 
 // Column
 
-func ShowColumn()       {}
-func CreateColumn()     {}
-func SetColumnName()    {}
-func SetColumnDefault() {}
-func CopyColumn()       {}
-func DeleteColumn()     {}
+func ShowColumn(column string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "column show " + column
+	return request(query, tbl, db, sessionId, config)
+}
+
+func ShowColumns(columns []string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	colNames := ""
+	for i := 0; i < len(columns); i++ {
+		colNames += columns[i]
+		if i != len(columns)-1 {
+			colNames += ":"
+		}
+	}
+	query := "column show " + colNames
+	return request(query, tbl, db, sessionId, config)
+}
+
+func CreateColumn(column Column, tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "column create " + column.Name + ":" + column.Type + ":" + column.Default
+	return request(query, tbl, db, sessionId, config)
+}
+
+func SetColumnName(name string, column string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "column set name " + column + " " + name
+	return request(query, tbl, db, sessionId, config)
+}
+
+func SetColumnDefault(def string, column string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "column set default " + column + " " + def
+	return request(query, tbl, db, sessionId, config)
+}
+
+func CopyColumn(name string, column string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "column copy " + column + " " + name
+	return request(query, tbl, db, sessionId, config)
+}
+
+func DeleteColumn(column string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "column delete " + column
+	return request(query, tbl, db, sessionId, config)
+}
 
 // Row
 
