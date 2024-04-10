@@ -93,3 +93,44 @@ func TestServer(config Config) error {
 	_, err = http.Get(url)
 	return err
 }
+
+// Root
+
+func ShowDBs() {}
+
+// DB
+
+func ShowTables() {}
+func CreateDB()   {}
+func SetDBName()  {}
+func CopyDB()     {}
+func DeleteDB()   {}
+
+// Table
+
+func ShowTable()    {}
+func CreateTable()  {}
+func SetTableName() {}
+func CopyTable()    {}
+func DeleteTable()  {}
+
+// Column
+
+func ShowColumn()       {}
+func CreateColumn()     {}
+func SetColumnName()    {}
+func SetColumnDefault() {}
+func CopyColumn()       {}
+func DeleteColumn()     {}
+
+// Row
+
+func ShowRow()   {}
+func CreateRow() {}
+func SetRow()    {}
+func CopyRow()   {}
+func DeleteRow() {}
+
+// User
+
+// Backup
