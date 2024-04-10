@@ -96,7 +96,22 @@ func TestServer(config Config) error {
 
 // Root
 
-func ShowDBs() {}
+func ShowDBs(config Config, sessionId string) (Table, error) {
+	url, err := ConstructUrl("", "", config)
+	if err != nil {
+		return Table{}, err
+	}
+	query := "show"
+	body := requestBody{
+		Query:     query,
+		SessionId: sessionId,
+	}
+	req, err := ConstructRequest(body, url)
+	if err != nil {
+		return Table{}, err
+	}
+	return DoRequest(req)
+}
 
 // DB
 
