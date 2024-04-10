@@ -130,11 +130,30 @@ func DeleteDB(db string, sessionId string, config Config) (Table, error) {
 
 // Table
 
-func ShowTable()    {}
-func CreateTable()  {}
-func SetTableName() {}
-func CopyTable()    {}
-func DeleteTable()  {}
+func ShowTable(tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "show"
+	return request(query, tbl, db, sessionId, config)
+}
+
+func CreateTable(tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "create"
+	return request(query, tbl, db, sessionId, config)
+}
+
+func SetTableName(name string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "set name " + name
+	return request(query, tbl, db, sessionId, config)
+}
+
+func CopyTable(name string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "copy " + name
+	return request(query, tbl, db, sessionId, config)
+}
+
+func DeleteTable(tbl string, db string, sessionId string, config Config) (Table, error) {
+	query := "delete"
+	return request(query, tbl, db, sessionId, config)
+}
 
 // Column
 
