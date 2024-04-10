@@ -135,6 +135,37 @@ func ShowTable(tbl string, db string, sessionId string, config Config) (Table, e
 	return request(query, tbl, db, sessionId, config)
 }
 
+func ShowTableColumns(columns []string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	colNames := ""
+	for i := 0; i < len(columns); i++ {
+		colNames += columns[i]
+		if i != len(columns)-1 {
+			colNames += ":"
+		}
+	}
+	query := "show " + colNames
+	return request(query, tbl, db, sessionId, config)
+}
+
+func ShowTableConditions(conditions []string, columns []string, tbl string, db string, sessionId string, config Config) (Table, error) {
+	colNames := ""
+	for i := 0; i < len(columns); i++ {
+		colNames += columns[i]
+		if i != len(columns)-1 {
+			colNames += ":"
+		}
+	}
+	conditionString := ""
+	for i := 0; i < len(conditions); i++ {
+		conditionString += conditions[i]
+		if i != len(conditions)-1 {
+			conditionString += " "
+		}
+	}
+	query := "show " + colNames + " where " + conditionString
+	return request(query, tbl, db, sessionId, config)
+}
+
 func CreateTable(tbl string, db string, sessionId string, config Config) (Table, error) {
 	query := "create"
 	return request(query, tbl, db, sessionId, config)
