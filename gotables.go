@@ -34,7 +34,6 @@ func ConstructUrl(tbl string, db string, config Config) (string, error) {
 		return "", errors.New("invalid url: host needs to be set")
 	}
 	if config.Port != "" {
-		out += ":"
 		out += config.Port
 	}
 	if tbl != "" {
